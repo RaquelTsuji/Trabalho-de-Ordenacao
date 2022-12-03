@@ -1,0 +1,145 @@
+import java.util.Random;
+
+public class MuitoEficiente {
+	public static void main(String[] args) {
+		//tempo inicial
+		long tempoNanoI = System.nanoTime();
+		long tempoInicial = System.currentTimeMillis();
+		
+		//tamanho do vetor = 10000, 30000, 90000, 270000, 810000, 2430000, 65610000
+		int [] v = new int [10000];
+		int n = 10000;
+		
+		//semente = 13,21,34,55,89,144
+		//preencherVetor (vetor para ser preenchido, número para preencher o vetor entre 0 e 99, semente)
+		preencherVetor(v,99,13);
+		
+		//ordenações muito eficientes
+		Shell(v, n);
+		System.out.println("ShellSort");
+		exibirVetor(v);
+		Tempo(tempoNanoI, tempoInicial);
+		
+		Merge(v, n);
+		System.out.println("\nMergeSort");
+		exibirVetor(v);
+		Tempo(tempoNanoI, tempoInicial);
+		
+		Quick(v, 0, 9999);
+		System.out.println("\nQuickSort");
+		exibirVetor(v);
+		Tempo(tempoNanoI, tempoInicial);
+	}
+	
+	//preenche e exibe o vetor
+    public static void preencherVetor(int [] v, int u, long seed){
+        Random rnd = new Random();
+        rnd.setSeed(seed);
+        for (int i = 0; i < v.length; i++) {
+            v[i] = rnd.nextInt(u);
+        }
+    }
+    public static void exibirVetor(int [] v){
+        int size = v.length;
+        for (int i = 0; i < v.length; i++) {
+            System.out.print(v[i] + " ");
+        }
+        System.out.println();
+    }
+	
+	//tempo final e demonstrar tempo total
+	public static void Tempo(long tempoNanoI, long tempoInicial) {
+		long tempoFinal = System.currentTimeMillis();
+        long tempoNanoF = System.nanoTime();
+        long tempoDecorrido = tempoFinal - tempoInicial;
+        long tempoDecorridoNano = tempoNanoF - tempoNanoI;
+        
+        System.out.println("Tempo de excecução(ms): " + tempoDecorrido);
+        System.out.println("Tempo de excecução(ns): " + tempoDecorridoNano);
+	}
+	
+	//programas de ordenações muito eficientes
+	public static void Shell(int [] v, int n) {
+    	int h = 1;
+    	
+    	do{
+    		h = h*3+1;
+    	} while (h < n);
+    	do {
+    		h /= 2;
+    		for (int i = h; i < n; i++) {
+    			int x = v[i];
+    			int j = i;
+    			while (v[j-h] > x) {
+    				v[j] = v[j-h];
+    				j -= h;
+    				if (j <= h) break;
+    			}
+    			v[j] = x;
+    		}
+    	} while (h != 1);
+    }
+	
+	public static void Merge(int [] v, int n) {
+		if (n < 2) {
+	        return;
+	    }
+	    int mid = n / 2;
+	    int[] l = new int[mid];
+	    int[] r = new int[n - mid];
+
+	    for (int i = 0; i < mid; i++) {
+	        l[i] = v[i];
+	    }
+	    for (int i = mid; i < n; i++) {
+	        r[i - mid] = v[i];
+	    }
+	    Merge(l, mid);
+	    Merge(r, n - mid);
+
+	    int left = mid, right = n - mid;
+	    int i = 0, j = 0, k = 0;
+	    while (i < left && j < right) {
+	        if (l[i] <= r[j]) {
+	            v[k++] = l[i++];
+	        }
+	        else {
+	            v[k++] = r[j++];
+	        }
+	    }
+	    while (i < left) {
+	        v[k++] = l[i++];
+	    }
+	    while (j < right) {
+	        v[k++] = r[j++];
+	    }
+    }
+	
+	public static void Quick(int [] v, int begin, int end) {
+		if (begin < end) {
+	        int partitionIndex = partitionQuick(v, begin, end);
+
+	        Quick(v, begin, partitionIndex-1);
+	        Quick(v, partitionIndex+1, end);
+	    }
+    }
+	private static int partitionQuick (int v[], int begin, int end) {
+		int pivot = v[end];
+	    int i = (begin-1);
+
+	    for (int j = begin; j < end; j++) {
+	        if (v[j] <= pivot) {
+	            i++;
+
+	            int swapTemp = v[i];
+	            v[i] = v[j];
+	            v[j] = swapTemp;
+	        }
+	    }
+	    int swapTemp = v[i+1];
+	    v[i+1] = v[end];
+	    v[end] = swapTemp;
+
+	    return i+1;
+	}
+}
