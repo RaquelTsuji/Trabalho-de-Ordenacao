@@ -1,0 +1,99 @@
+import java.util.Random;
+
+public class PoucoEficiente {
+	public static void main(String[] args) {
+		//tempo inicial
+		long tempoNanoI = System.nanoTime();
+		long tempoInicial = System.currentTimeMillis();
+		
+		//tamanho do vetor = 10000, 30000, 90000, 270000
+		int [] v = new int [10000];
+		int n = 10000;
+		
+		//semente = 13,21,34,55,89,144
+		//preencherVetor (vetor para ser preenchido, número para preencher o vetor entre 0 e 99, semente)
+		preencherVetor(v,99,13);
+		
+		//ordenações pouco eficientes
+		Bubble(v, n);
+		System.out.print("BubbleSort: ");
+		exibirVetor(v);
+		Tempo(tempoNanoI, tempoInicial);
+		
+		Selection(v, n);
+		System.out.println("\nSelectionSort");
+		exibirVetor(v);
+		Tempo(tempoNanoI, tempoInicial);
+		
+		Insertion(v, n);
+		System.out.println("\nInsertionSort");
+		exibirVetor(v);
+		Tempo(tempoNanoI, tempoInicial);
+    }
+	
+	//preenche e exibe o vetor
+    public static void preencherVetor(int [] v, int u, long seed){
+        Random rnd = new Random();
+        rnd.setSeed(seed);
+        for (int i = 0; i < v.length; i++) {
+            v[i] = rnd.nextInt(u);
+        }
+    }
+    public static void exibirVetor(int [] v){
+        int size = v.length;
+        for (int i = 0; i < v.length; i++) {
+            System.out.print(v[i] + " ");
+        }
+        System.out.println();
+    }
+	
+	//tempo final e demonstrar tempo total
+	public static void Tempo(long tempoNanoI, long tempoInicial) {
+		long tempoFinal = System.currentTimeMillis();
+        long tempoNanoF = System.nanoTime();
+        long tempoDecorrido = tempoFinal - tempoInicial;
+        long tempoDecorridoNano = tempoNanoF - tempoNanoI;
+        
+        System.out.println("Tempo de excecução(ms): " + tempoDecorrido);
+        System.out.println("Tempo de excecução(ns): " + tempoDecorridoNano);
+	}
+    
+	//programas de ordenações pouco eficientes
+    public static void Bubble(int [] v, int n) {
+    	for (int i = 0; i < n-1; i++) {
+    		for (int j = 0; j < n-1-i; j++) {
+    			if (v[j] > v[j+1]) {
+    				int x = v[j];
+    				v[j] = v[j+1];
+    				v[j+1] = x;
+    			}
+    		}
+    	}
+    }
+    
+    public static void Selection(int [] v, int n) {
+    	for (int i = 0; i <= n-1; i++) {
+    		int min = i;
+    		for (int j = i+1; j < n; j++)
+    			if (v[j] < v[min])
+    				min = j;
+    		int x = v[min];
+    		v[min] = v[i];
+    		v[i] = x;
+    	}
+    }
+    
+    public static void Insertion(int [] v, int n) {
+    	int j = 0;
+    	
+    	for (int i = 1; i < n; i++){
+    		int x = v[i];
+    		j = i;
+    		while (j>0 && v[j-1] > x) {
+    			v[j] = v[j-1];
+    			j--;
+    		}
+    		v[j] = x;
+    	}
+    }
+}
